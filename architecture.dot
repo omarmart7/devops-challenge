@@ -1,0 +1,27 @@
+digraph AppArchitecture {
+    rankdir=LR;
+    node [fontname="Arial"];
+    edge [fontname="Arial"];
+
+    // User interactions
+    user [label="Users" shape=ellipse style=filled fillcolor=lightblue];
+
+    // Applications
+    votesAPI [label="Votes API\n(Python/Flask)\n\n• POST /vote endpoint\n• GET /results endpoint\n• Pure backend API"
+               shape=rect style="rounded,filled" fillcolor=lightgreen];
+
+    votesUI [label="Votes UI\n(Node.js + Angular)\n\n• Unified voting interface\n• Real-time results display\n• Interactive voting\n• Main user interface"
+             shape=rect style="rounded,filled" fillcolor=lightyellow];
+
+    // Database
+    db [label="PostgreSQL\nDatabase" shape=cylinder style=filled fillcolor=lightgray];
+
+    // Connections with labels
+    user -> votesUI [label="Vote & View Results\n(HTTP + WebSocket)"];
+    votesUI -> votesAPI [label="POST /vote\nGET /results\n(JSON API)" style=dashed color=blue];
+    votesAPI -> db [label="Store/Retrieve votes\n(SQL)"];
+
+
+    // Layout hints
+    {rank=same; votesAPI; votesUI;}
+}
