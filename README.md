@@ -34,6 +34,11 @@ cd helm-chart
 chmod +x setup.sh 
 ./setup.sh
 
+# 5. WHEN YOU FINISH AND WANT TO DELETE EVERYTHING NOT BEFORE TESTING THE APP 
+#### THIS WILL DELETE ALL THE RESOURCES CREATED BY THIS DEPLOYMENT, IMAGES, FILES, REPO, MINIKUBE etc DONT WORRY I WONT HACK YOU 
+chmod +x nuclear-bomb.sh
+./nuclear-bomb.sh 
+
 The setup script will:
 - Initialize minikube cluster
 - Enable ingress and metrics-server addons
