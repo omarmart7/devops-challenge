@@ -1,0 +1,64 @@
+######### templates/votes-ui.yaml - FRONTEND
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: votes-ui-deployment
+  labels:
+    app: votes-ui
+spec:
+  replicas: {{ .Values.votesUi.replicas }}
+  selector:
+    matchLabels:
+      app: votes-ui
+  template:
+    metadata:
+      labels:
+        app: votes-ui
+    spec:
+      containers:
+      - name: votes-ui
+        image: {{ .Values.votesUi.image.repository }}:{{ .Values.votesUi.image.tag }}
+        imagePullPolicy: {{ .Values.votesUi.image.pullPolicy }}
+        ports:
+        - containerPort: 4000
+          name: http
+        env:
+        - name: VOTES_API_HOST
+          value: {{ .Values.votesUi.env.VOTES_API_HOST | quote }}
+        - name: VOTES_API_PORT
+          value: {{ .Values.votesUi.env.VOTES_API_PORT | quote }}
+        - name: PORT
+          value: {{ .Values.votesUi.env.PORT | quote }}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 4000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 4000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: votes-ui-service
+spec:
+  selector:
+    app: votes-ui
+  ports:
+  - protocol: TCP
+    port: 4000
+    targetPort: 4000
+  type: ClusterIP

@@ -1,0 +1,44 @@
+############ values.yaml
+postgresql:
+  image:
+    repository: "postgres"
+    tag: "13"
+  auth:
+    password: "postgres"
+    database: "votes"
+  service:
+    port: 5432
+
+votesApi:
+  replicas: 2
+  image:
+    repository: "votes-api"
+    tag: "v1-fixed"
+    pullPolicy: Never
+  service:
+    port: 80
+  env:
+    POSTGRES_HOST: "postgres-service"
+    POSTGRES_USER: "postgres"
+    POSTGRES_PASSWORD: "postgres"
+    POSTGRES_DB: "votes"
+    OPTION_A: "Cats"
+    OPTION_B: "Dogs"
+    PORT: "80"
+
+votesUi:
+  replicas: 2
+  image:
+    repository: "votes-ui"
+    tag: "v1-fixed"
+    pullPolicy: Never
+  service:
+    port: 4000
+  env:
+    VOTES_API_HOST: "votes-api-service"
+    VOTES_API_PORT: "80"
+    PORT: "4000"
+
+ingress:
+  enabled: true
+  host: "voting-app.local"

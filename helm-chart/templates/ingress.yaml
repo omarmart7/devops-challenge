@@ -1,0 +1,36 @@
+######## templates/ingress.yaml
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: voting-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: votes-ui-service
+            port:
+              number: 4000
+      - path: /vote
+        pathType: Exact
+        backend:
+          service:
+            name: votes-api-service
+            port:
+              number: 80
+      - path: /results
+        pathType: Exact
+        backend:
+          service:
+            name: votes-api-service
+            port:
+              number: 80
+{{- end }}
